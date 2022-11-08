@@ -10,6 +10,11 @@
 Telescogs allows users to save matches to a .txt file, or to view them in the terminal
 ### Demo
 
+<div align="center">
+  https://user-images.githubusercontent.com/84278383/200593178-32116b35-66c7-445f-95c4-04ef7b984f86.mov
+<div/>
+
+
 ## Roadmap
 * Startup dialogue -> Promt user if they would like to search or change their settings
   * Update discogs/telegram account or username
