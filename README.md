@@ -8,6 +8,8 @@
 ## Features
 ### Save or view matches
 Telescogs allows users to save matches to a .txt file, or to view them in the terminal
+### Demo
+
 ## Roadmap
 * Startup dialogue -> Promt user if they would like to search or change their settings
   * Update discogs/telegram account or username
