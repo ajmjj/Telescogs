@@ -1,8 +1,30 @@
 from alive_progress import alive_bar
 from datetime import datetime
 import os
+import main_helper as utils
 import discogs_helper as disc
 import configparser
+
+
+# add main to tele helper so that this can be put in main helper
+async def new_search():
+    while True:
+        res = input('Would you like to search another chat? (y/n) : ')
+        if res.lower().strip() == 'y' or res.lower().strip() == 'yes':
+            global repeat
+            repeat = True
+            # todo -> set repeat to true
+            # if repeat == True:
+              # dont do telegram greeting
+            os.system('cls' if os.name == 'nt' else 'clear')
+            await main()
+            break
+        elif res.lower().strip() == 'n' or res.lower().strip() == 'no':
+            print('Thanks for using Telescogs!')
+            print('Exiting...')
+            break
+
+repeat = False
 
 # todo -> in config add option to refine search criteria
   # to be set by apple script with popup
@@ -65,8 +87,8 @@ async def main():
     chats = []
     # Limits the number of messages to search for
     message_limit = None
-
-    await tele.greet(client)
+    if repeat == False:
+        await tele.greet(client)
 
     print('\nYour chats:')
     print('----------------------------------------')
@@ -132,26 +154,39 @@ async def main():
 
     # todo -> create func print_results()
     print(f'\nFound {len(available_releases)} releases from your want list available in {tele.get_chat_from_id(chat_id,chats).get("name")}')
-    # todo -> create func save_results()
+
         # ask user -> would you like to save results?
     # print(available_releases)
-
-    date_time = datetime.now().strftime("%Y%-m-%d %H-%M")
     
-    #todo -> create func save_results()
-    # todo -> change output location in config
-    print('\nSaving results to .txt file...')
-    with open(f'{chat_name} - {date_time}.txt', 'w') as f:
-        counter = 0
-        with alive_bar(len(available_releases)) as bar:
-            for release in available_releases:
-                counter += 1
-                f.write(f'\n{counter}. {release["release"]["title"]} - {release["release"]["artist"]} / {release["release"]["label"]} - {release["release"]["catno"]} ({release["release"]["year"]})' )
-                bar()
+    # while True:
+    #     save_res = input('Would you like to save results? (y/n) : ')
+    #     if save_res.lower().strip() == 'y' or save_res.lower().strip() == 'yes':
+    #         # todo -> change output location in config
+    #         utils.save_results(chat_name, available_releases)  
+    #         break
+    #     elif save_res.lower().strip() == 'n' or save_res.lower().strip() == 'no':
+    #         print('Results not saved')
+    #         break
+    #     else:
+    #         print('\nInvalid input, try again')
 
+    # ask user if they want to see/save results
+    utils.res(chat_name, available_releases)
+
+    # ask user if they want to search again, or exit
+    await new_search()
+
+
+
+    
+    
+
+    
+    
 
 with client:
     client.loop.run_until_complete(main())
+
 
 
 
