@@ -9,7 +9,7 @@ import configparser
 # add main to tele helper so that this can be put in main helper
 async def new_search():
     while True:
-        res = input('Would you like to search another chat? (y/n) : ')
+        res = input('\nWould you like to search another chat? (y/n) : ')
         if res.lower().strip() == 'y' or res.lower().strip() == 'yes':
             global repeat
             repeat = True
@@ -71,14 +71,6 @@ telegram_username = config['Telegram']['username']
 print('========================================')
 print('            Telegram Init')
 print('========================================')
-# todo -> create function check_tele_username() to check if username is set or not
-# if telegram_username == '': # username is not set
-#     telegram_username = input('Enter your Telegram username : @')
-#     telegram_username = '@' + telegram_username
-#     config['Telegram']['username'] = telegram_username
-
-#     with open('config.ini', 'w') as configfile:
-#         config.write(configfile)
 tele.check_username(telegram_username, config)
 
 client = TelegramClient(telegram_username, telegram_api_id, telegram_api_hash)
@@ -130,33 +122,7 @@ async def main():
     print(f'\nFound {len(chat_image_messages)} shared releases in {chat_name} chat') 
 
     print('Checking matches...')
-    available_releases = []
-    with alive_bar(len(wantlist)*len(chat_image_messages)) as bar:
-        for release in wantlist:
-            for message in chat_image_messages:
-                # todo -> create function check_match()
-                # check if artist, year, catno are 
-                # check songs in release
-                match = {
-                    'release': release,
-                    'artist' : False,
-                    'label' : False,
-                    'title' : False,
-                    'catno' : False,
-                    'year' : False
-                }
-                for key in match.keys():
-                    if str(release.get(key)) in message['text']:
-                        match[key] = True
-                # Sum of boolean values in match (doesn't include release (release not bool)):
-                if sum([value for key, value in match.items() if key != 'release']) >= 4:
-                    # Add match to available releases
-                    available_releases.append(match)
-
-                    # Print the match found to the console (optional)
-                        # todo -> make this an optional feature in the settings
-                    utils.show_match(match)
-                bar()
+    available_releases = utils.check_matches(wantlist, chat_image_messages)    
 
     # Print number of matches found
     utils.match_count(available_releases, chat_name)
@@ -164,7 +130,7 @@ async def main():
     # Ask user if they want to see/save results
     utils.res(chat_name, available_releases)
 
-    # ask user if they want to search again, or exit
+    # Ask user if they want to search again, or exit
     await new_search()
 
 

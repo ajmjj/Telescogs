@@ -18,8 +18,9 @@ def save_results(chat_name, available_releases):
 
 
 def view_results(chat_name, available_releases):
-    print('\nDisplaying results')
-    print('========================================')
+    print('\nDisplaying results...')
+
+    print('\n========================================')
     print(f'        {len(available_releases)} releases in {chat_name}')
     print('========================================')
     with alive_bar(len(available_releases)) as bar:
@@ -56,3 +57,33 @@ def match_count(available_releases, chat_name):
 
 def show_match(match):
     print(f'Match found: {match["release"]["title"]} - {match["release"]["artist"]}')
+
+def check_matches(wantlist, chat_image_messages):
+    available_releases = []
+    with alive_bar(len(wantlist)*len(chat_image_messages)) as bar:
+        for release in wantlist:
+            for message in chat_image_messages:
+                # todo -> create function check_match()
+                # check if artist, year, catno are 
+                # check songs in release
+                match = {
+                    'release': release,
+                    'artist' : False,
+                    'label' : False,
+                    'title' : False,
+                    'catno' : False,
+                    'year' : False
+                }
+                for key in match.keys():
+                    if str(release.get(key)) in message['text']:
+                        match[key] = True
+                # Sum of boolean values in match (doesn't include release (release not bool)):
+                if sum([value for key, value in match.items() if key != 'release']) >= 4:
+                    # Add match to available releases
+                    available_releases.append(match)
+
+                    # Print the match found to the console (optional)
+                        # todo -> make this an optional feature in the settings
+                    show_match(match)
+                bar()
+    return available_releases
