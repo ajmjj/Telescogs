@@ -13,9 +13,6 @@ async def new_search():
         if res.lower().strip() == 'y' or res.lower().strip() == 'yes':
             global repeat
             repeat = True
-            # todo -> set repeat to true
-            # if repeat == True:
-              # dont do telegram greeting
             os.system('cls' if os.name == 'nt' else 'clear')
             await main()
             break
@@ -28,6 +25,14 @@ repeat = False
 
 # todo -> in config add option to refine search criteria
   # to be set by apple script with popup
+# add dialogue at the beginning
+    # what would you like to do? search or change settings?
+    # -> update username, etc.
+    # -> update default save option
+    # -> select if they want each match to be printed to the console (show_match())
+    # -> change default download path
+    # -> logout of discogs & telegram
+
 # Discogs configs
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -61,21 +66,20 @@ from telethon.tl.types import InputMessagesFilterPhotos
 
 telegram_api_id = config['Telegram']['api_id']
 telegram_api_hash = config['Telegram']['api_hash']
-# telegram_phone  = config['Telegram']['telegram_phone'] # todo -> not needed?
 telegram_username = config['Telegram']['username']
 
 print('========================================')
 print('            Telegram Init')
 print('========================================')
-# todo -> create function check_tele_username() to check if username is valid
-if telegram_username == '': # username is not set
-    telegram_username = input('Enter your Telegram username : @')
-    telegram_username = '@' + telegram_username
-    config['Telegram']['username'] = telegram_username
+# todo -> create function check_tele_username() to check if username is set or not
+# if telegram_username == '': # username is not set
+#     telegram_username = input('Enter your Telegram username : @')
+#     telegram_username = '@' + telegram_username
+#     config['Telegram']['username'] = telegram_username
 
-    with open('config.ini', 'w') as configfile:
-        config.write(configfile)
-        
+#     with open('config.ini', 'w') as configfile:
+#         config.write(configfile)
+tele.check_username(telegram_username, config)
 
 client = TelegramClient(telegram_username, telegram_api_id, telegram_api_hash)
 client.start()
@@ -144,33 +148,20 @@ async def main():
                 for key in match.keys():
                     if str(release.get(key)) in message['text']:
                         match[key] = True
-                # sum of boolean values in match (doesn't include release (release not bool)):
+                # Sum of boolean values in match (doesn't include release (release not bool)):
                 if sum([value for key, value in match.items() if key != 'release']) >= 4:
+                    # Add match to available releases
                     available_releases.append(match)
-                    # todo -> creare function print_match()
-                    # print(f'Match found: {available_releases[-1]} === {message["text"]}')
-                    print(f'Match found: {match["release"]["title"]} - {match["release"]["artist"]}')
+
+                    # Print the match found to the console (optional)
+                        # todo -> make this an optional feature in the settings
+                    utils.show_match(match)
                 bar()
 
-    # todo -> create func print_results()
-    print(f'\nFound {len(available_releases)} releases from your want list available in {tele.get_chat_from_id(chat_id,chats).get("name")}')
+    # Print number of matches found
+    utils.match_count(available_releases, chat_name)
 
-        # ask user -> would you like to save results?
-    # print(available_releases)
-    
-    # while True:
-    #     save_res = input('Would you like to save results? (y/n) : ')
-    #     if save_res.lower().strip() == 'y' or save_res.lower().strip() == 'yes':
-    #         # todo -> change output location in config
-    #         utils.save_results(chat_name, available_releases)  
-    #         break
-    #     elif save_res.lower().strip() == 'n' or save_res.lower().strip() == 'no':
-    #         print('Results not saved')
-    #         break
-    #     else:
-    #         print('\nInvalid input, try again')
-
-    # ask user if they want to see/save results
+    # Ask user if they want to see/save results
     utils.res(chat_name, available_releases)
 
     # ask user if they want to search again, or exit

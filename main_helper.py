@@ -51,3 +51,8 @@ def res(chat_name, available_releases):
         else:
             print('\nInvalid input, try again')
 
+def match_count(available_releases, chat_name):
+    print(f'\nFound {len(available_releases)} releases from your want list available in {chat_name}')
+
+def show_match(match):
+    print(f'Match found: {match["release"]["title"]} - {match["release"]["artist"]}')

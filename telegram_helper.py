@@ -1,7 +1,6 @@
 from telethon import TelegramClient
 from telethon.tl.types import InputMessagesFilterPhotos
-
-
+import configparser
 
 def get_chat_from_id(chat_id, chats):
     return [chat for chat in chats if chat_id == chat['id']][0]
@@ -36,50 +35,13 @@ async def greet(client):
     me = await client.get_me()
     print(f'\nLogged-in to Telegram as: {me.username}')
 
+def check_username(username, config):
+    if username == '': # username is not set
+        username = input('Enter your Telegram username : @')
+        username = '@' + username
+        config['Telegram']['username'] = username
 
-# async def get_shared_releases(client):
-#     chats = []
-#     chat_image_messages = []
-#     # Limits the number of messages to search for
-#     message_limit = None
-
-#     async for dialog in client.iter_dialogs():
-#         if str(dialog.id)[0] == '-':
-#             chats.append(
-#                 {
-#                     'id': dialog.id,
-#                     'name': dialog.name
-#                 }
-#             )
-#             print(f'{dialog.name} has ID {dialog.id}')
-        
-#     # print()
-#     print('\nWhich group do you want to search?')
-#     chat_id = select_chat(chats)
-#     print()
-
-
-#     async for message in client.iter_messages(chat_id, limit=message_limit, filter=InputMessagesFilterPhotos): # consider using get_messages() instead
-#         if message.id % 100 == 0:
-#             print(f'Processing messages with photos, {message.id} remaining')
-
-#         chat_image_messages.append(
-#             {
-#                 'id': message.id,
-#                 'photo': message.photo,
-#                 'text': message.text,
-#                 'message': message.message 
-#             }
-#         )
-
-#     print(f'\nFound {len(chat_image_messages)} shared releases in {get_chat_from_id(chat_id, chats).get("name")} chat') 
-
-    
-    ## get discogs want list
-    # for release in discogs want list:
-    #    if catalog number in chat_image_messages:
-    #        add release name to list
-
-    # print list of releases in chat and discogs want list
+        with open('config.ini', 'w') as configfile:
+            config.write(configfile)
     
 
