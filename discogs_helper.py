@@ -67,8 +67,7 @@ def get_wantlist(client):
     print('Found ' + str(len(wantlist_res)) + ' items in your wantlist')
     print('\nProcessing wantlist data...')
     with alive_bar(len(wantlist_res)) as bar:
-        for wantlistItem in wantlist_res: # todo -> waste of time?
-            # todo add progress bar
+        for wantlistItem in wantlist_res: # todo -> waste of time? could be skipped and used later
             filtered_release = {
                 'id': wantlistItem.release.id,
                 'title': wantlistItem.release.title,

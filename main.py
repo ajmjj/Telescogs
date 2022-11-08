@@ -102,8 +102,7 @@ async def main():
                 bar()
 
     print('\nWhich group do you want to search?')
-    # todo -> select chat should return tuple (chat_id, chat_name)
-    chat_id = tele.select_chat(chats)
+    chat_id, chat_name = tele.select_chat(chats)
 
     with alive_bar() as bar:
         async for message in client.iter_messages(chat_id, limit=message_limit, filter=InputMessagesFilterPhotos): # consider using get_messages() instead
@@ -118,7 +117,7 @@ async def main():
                 }
             )
             bar()
-    chat_name = tele.get_chat_from_id(chat_id,chats).get("name")
+    # chat_name = tele.get_chat_from_id(chat_id,chats).get("name")
     print(f'\nFound {len(chat_image_messages)} shared releases in {chat_name} chat') 
 
     print('Checking matches...')
