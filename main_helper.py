@@ -1,10 +1,8 @@
 from datetime import datetime
 from alive_progress import alive_bar
 
+# todo -> add variable save path
 
-
-
-# todo -> add variable output path
 def save_results(chat_name, available_releases):
     date_time = datetime.now().strftime("%Y-%m-%d %H-%M")
     print('\nSaving results to .txt file...')
@@ -20,13 +18,13 @@ def save_results(chat_name, available_releases):
 def view_results(chat_name, available_releases):
     print('\nDisplaying results...')
 
-    print('\n========================================')
-    print(f'        {len(available_releases)} releases in {chat_name}')
-    print('========================================')
-    with alive_bar(len(available_releases)) as bar:
-        for release in available_releases:
-            print(f'{release["release"]["title"]} - {release["release"]["artist"]} / {release["release"]["label"]} - {release["release"]["catno"]} ({release["release"]["year"]})')
-            bar()
+    print('\n================================================================================')
+    print(f'                    {len(available_releases)} releases in {chat_name}')
+    print('================================================================================')
+    counter = 0
+    for release in available_releases:
+        counter += 1
+        print(f'{counter}. {release["release"]["title"]} - {release["release"]["artist"]} / {release["release"]["label"]} - {release["release"]["catno"]} ({release["release"]["year"]})')
 
 def yes_results(chat_name,  available_releases):
     while True:
@@ -63,9 +61,6 @@ def check_matches(wantlist, chat_image_messages):
     with alive_bar(len(wantlist)*len(chat_image_messages)) as bar:
         for release in wantlist:
             for message in chat_image_messages:
-                # todo -> create function check_match()
-                # check if artist, year, catno are 
-                # check songs in release
                 match = {
                     'release': release,
                     'artist' : False,

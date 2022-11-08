@@ -50,9 +50,9 @@ access_token_url = 'https://api.discogs.com/oauth/access_token'
 user_agent = 'Telespogs/1.0'
 
 os.system('cls' if os.name == 'nt' else 'clear')
-print('========================================')
-print('             Discogs Init')
-print('========================================')
+print('================================================================================')
+print('                                Discogs Init')
+print('================================================================================')
 client = disc.auth(consumer_key, consumer_secret, user_agent, access_token, access_secret)
 
 wantlist = disc.get_wantlist(client)
@@ -68,14 +68,14 @@ telegram_api_id = config['Telegram']['api_id']
 telegram_api_hash = config['Telegram']['api_hash']
 telegram_username = config['Telegram']['username']
 
-print('========================================')
-print('            Telegram Init')
-print('========================================')
+print('================================================================================')
+print('                               Telegram Init')
+print('================================================================================')
 tele.check_username(telegram_username, config)
 
 client = TelegramClient(telegram_username, telegram_api_id, telegram_api_hash)
 client.start()
-print('\nTelegram Client Created') # log
+print('Telegram Client Created') # log
 
 
 async def main():
@@ -87,7 +87,7 @@ async def main():
         await tele.greet(client)
 
     print('\nYour chats:')
-    print('----------------------------------------')
+    print('--------------------------------------------------------------------------------')
     
     # todo -> migrate to helper
     # def get_dialogs()
@@ -124,7 +124,7 @@ async def main():
             bar()
 
     # Check matches
-    print('Checking matches...')
+    print('\nChecking matches...')
     available_releases = utils.check_matches(wantlist, chat_image_messages)    
 
     # Print number of matches found

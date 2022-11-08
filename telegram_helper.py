@@ -9,7 +9,7 @@ def select_chat(chats):
     chat_input = input('Type the name or the Id: ')
 
     # if chat_input[0] == '-' and chat_input[1:].isdigit():
-    if chat_input.isdigit():
+    if chat_input.isdigit() or chat_input[0] == '-' and chat_input[1:].isdigit():
         print(f'\nInput type: Chat Id')
         chat_input = int(chat_input) # make chat_input an integer
 
