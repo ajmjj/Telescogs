@@ -89,6 +89,8 @@ async def main():
     print('\nYour chats:')
     print('----------------------------------------')
     
+    # todo -> migrate to helper
+    # def get_dialogs()
     with alive_bar() as bar:
         async for dialog in client.iter_dialogs():
             if str(dialog.id)[0] == '-':
@@ -101,9 +103,12 @@ async def main():
                 print(f'"{dialog.name}" has ID {dialog.id}')
                 bar()
 
+    # Ask user to select a chat
     print('\nWhich group do you want to search?')
     chat_id, chat_name = tele.select_chat(chats)
 
+    # todo -> migrate to helper
+    # def get_chats()
     with alive_bar() as bar:
         async for message in client.iter_messages(chat_id, limit=message_limit, filter=InputMessagesFilterPhotos): # consider using get_messages() instead
             if message.id % 100 == 0:
@@ -117,9 +122,8 @@ async def main():
                 }
             )
             bar()
-    # chat_name = tele.get_chat_from_id(chat_id,chats).get("name")
-    print(f'\nFound {len(chat_image_messages)} shared releases in {chat_name} chat') 
 
+    # Check matches
     print('Checking matches...')
     available_releases = utils.check_matches(wantlist, chat_image_messages)    
 
@@ -142,25 +146,3 @@ async def main():
 
 with client:
     client.loop.run_until_complete(main())
-
-
-
-
-
-
-
-# async def main():
-#     await tele.greet(client)
-#     await tele.get_shared_releases(client)
-
-# with client:
-#     client.loop.run_until_complete(main())
-
-
-
-
-
-
-
-
-    # print list of releases in chat and discogs want list
