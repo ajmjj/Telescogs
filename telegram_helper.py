@@ -22,7 +22,7 @@ def select_chat(chats):
             print('\nInvalid chat Id, try again')
             select_chat(chats)
     else: 
-        print(f'Input type: Chat name')
+        print(f'\nInput type: Chat name')
         try:
             selected_chat_id = int([chat.get('id') for chat in chats if chat_input.lower().strip() == chat['name'].lower().strip()][0])
             print(f'Chat found: {get_chat_from_id(selected_chat_id, chats).get("name")}')
@@ -34,7 +34,7 @@ def select_chat(chats):
         
 async def greet(client):
     me = await client.get_me()
-    print(f'\nLogged-in to Telegram as: {me.first_name} {me.last_name} ({me.username})')
+    print(f'\nLogged-in to Telegram as: {me.username}')
 
 
 # async def get_shared_releases(client):

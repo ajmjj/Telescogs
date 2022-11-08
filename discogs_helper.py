@@ -3,6 +3,7 @@ import oauth2 as oauth
 import configparser
 import discogs_client
 import webbrowser
+from alive_progress import alive_bar
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -57,22 +58,26 @@ def auth(consumer_key, consumer_secret, user_agent, access_token, access_secret 
 
 def greet_user(client):
     me = client.identity()
-    print('Logged in as: ' + me.username)
+    print('Logged in to Discogs as: ' + me.username)
 
 def get_wantlist(client):
-    print('\nGetting wantlist from discogs...')
+    print('\nGetting wantlist from Discogs...')
     wantlist_res = client.identity().wantlist
     wantlist = []
     print('Found ' + str(len(wantlist_res)) + ' items in your wantlist')
-    for wantlistItem in wantlist_res:
-        filtered_release = {
-            'id': wantlistItem.release.id,
-            'title': wantlistItem.release.title,
-            'artist': wantlistItem.release.artists[0].name,
-            'label': wantlistItem.release.labels[0].name,
-            'catno': wantlistItem.release.data['labels'][0]['catno'],
-            'year': wantlistItem.release.data['year']
-        }
-        wantlist.append(filtered_release)
+    print('\nProcessing wantlist data...')
+    with alive_bar(len(wantlist_res)) as bar:
+        for wantlistItem in wantlist_res: # todo -> waste of time?
+            # todo add progress bar
+            filtered_release = {
+                'id': wantlistItem.release.id,
+                'title': wantlistItem.release.title,
+                'artist': wantlistItem.release.artists[0].name,
+                'label': wantlistItem.release.labels[0].name,
+                'catno': wantlistItem.release.data['labels'][0]['catno'],
+                'year': wantlistItem.release.data['year']
+            }
+            wantlist.append(filtered_release)
+            bar()
     return(wantlist)
 
