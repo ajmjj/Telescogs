@@ -1,5 +1,5 @@
 # Telescogs
- Telescogs is sa python 3.x script that lets users search their telegram chats for releases that are in their Discogs wantlist.
+ Telescogs is a python 3.x script that lets users search their telegram chats for releases that are in their Discogs wantlist.
  
 ## Use
 1. Download zipped file 
