@@ -3,8 +3,8 @@
  
 ## Use
 1. Download zipped file 
-2. Get Telegram API credentials, and add them config.ini    ([click here](https://core.telegram.org/api/obtaining_api_id))
-3. Get Discogs API credentials, and add them to config.ini  ([click here](https://www.discogs.com/settings/developers))
+2. Create Telegram application and add API Id and Hash to config.ini    ([click here](https://core.telegram.org/api/obtaining_api_id))
+3. Create Discogs application add Consumer Key & Consumer Secret to config.ini  ([click here](https://www.discogs.com/settings/developers))
 4. Run script in terminal
 5. Follow instructions on terminal
 ## Features
