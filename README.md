@@ -3,6 +3,7 @@
  
 ## Use
 1. Download zipped file 
+2. Get Telegram API credentials and paste them into the config.ini (https://core.telegram.org/api/obtaining_api_id)
 2. Run script in terminal
 3. Follow instructions on terminal
 ## Features
