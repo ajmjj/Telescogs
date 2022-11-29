@@ -3,9 +3,10 @@
  
 ## Use
 1. Download zipped file 
-2. Get Telegram API credentials and paste them into the config.ini (https://core.telegram.org/api/obtaining_api_id)
-2. Run script in terminal
-3. Follow instructions on terminal
+2. Get Telegram API credentials, and add them config.ini    ([click here](https://core.telegram.org/api/obtaining_api_id))
+3. Get Discogs API credentials, and add them to config.ini  ([click here](https://www.discogs.com/settings/developers))
+4. Run script in terminal
+5. Follow instructions on terminal
 ## Features
 ### Save or view matches
 Telescogs allows users to save matches to a .txt file, or to view them in the terminal
