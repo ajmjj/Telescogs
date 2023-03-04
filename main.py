@@ -114,10 +114,8 @@ async def main():
     with alive_bar() as bar:
         async for message in client.iter_messages(chat_id, 
             limit=message_limit, 
-            # min_id=0, # get last id in db, get new messages from there
             filter=InputMessagesFilterPhotos,
-            # reverse=True # reverse=True to get oldest messages first (useful when saving to db)
-            ): # consider using get_messages() instead
+            ): 
 
             if message.id % 100 == 0: print(f'Processing messages, {message.id} remaining') # debug
 
@@ -127,7 +125,6 @@ async def main():
                     'id': message.id,           # message id
                     'photo': message.photo,     # photo object (use message.download_media() to download)
                     'text': message.text,       # message text
-                    # 'message': message.message  # message content
                 }
             )
             bar()
