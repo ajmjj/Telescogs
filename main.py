@@ -7,7 +7,7 @@ import configparser
 
 
 # add main to tele helper so that this can be put in main helper
-async def new_search():
+async def new_search(client):
     while True:
         res = input('\nWould you like to search another chat? (y/n) : ')
         if res.lower().strip() == 'y' or res.lower().strip() == 'yes':
@@ -18,7 +18,9 @@ async def new_search():
             break
         elif res.lower().strip() == 'n' or res.lower().strip() == 'no':
             print('Thanks for using Telescogs!')
-            print('Exiting...')
+            print('Disconnecting ...')
+            await client.disconnect()
+            print('Disconnected')
             break
 
 repeat = False
@@ -110,15 +112,22 @@ async def main():
     # todo -> migrate to helper
     # def get_chats()
     with alive_bar() as bar:
-        async for message in client.iter_messages(chat_id, limit=message_limit, filter=InputMessagesFilterPhotos): # consider using get_messages() instead
-            if message.id % 100 == 0:
-                print(f'Processing messages, {message.id} remaining')
+        async for message in client.iter_messages(chat_id, 
+            limit=message_limit, 
+            # min_id=0, # get last id in db, get new messages from there
+            filter=InputMessagesFilterPhotos,
+            # reverse=True # reverse=True to get oldest messages first (useful when saving to db)
+            ): # consider using get_messages() instead
+
+            if message.id % 100 == 0: print(f'Processing messages, {message.id} remaining') # debug
+
             chat_image_messages.append(
                 {
-                    'id': message.id,
-                    'photo': message.photo,
-                    'text': message.text,
-                    'message': message.message 
+                    'chat_id': chat_id,         # chat_id is the same for all messages
+                    'id': message.id,           # message id
+                    'photo': message.photo,     # photo object (use message.download_media() to download)
+                    'text': message.text,       # message text
+                    # 'message': message.message  # message content
                 }
             )
             bar()
@@ -134,9 +143,7 @@ async def main():
     utils.res(chat_name, available_releases)
 
     # Ask user if they want to search again, or exit
-    await new_search()
-
-
+    await new_search(client)
 
     
     
