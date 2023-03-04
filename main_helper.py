@@ -1,5 +1,6 @@
 from datetime import datetime
 from alive_progress import alive_bar
+from telethon.tl.types import InputMessagesFilterPhotos
 
 # todo -> add variable save path
 
@@ -82,3 +83,39 @@ def check_matches(wantlist, chat_image_messages):
                     show_match(match)
                 bar()
     return available_releases
+
+async def get_dialogs(client):
+    chats = []
+    with alive_bar() as bar:
+        async for dialog in client.iter_dialogs():
+            if str(dialog.id)[0] == '-':
+                chats.append(
+                    {
+                        'id': dialog.id,
+                        'name': dialog.name
+                    }
+                )
+                print(f'"{dialog.name}" has ID {dialog.id}')
+                bar()
+    return chats
+
+async def get_chat_messages(client, chat_id, message_limit):
+    chat_image_messages = []
+    with alive_bar() as bar:
+        async for message in client.iter_messages(chat_id, 
+            limit=message_limit, 
+            filter=InputMessagesFilterPhotos,
+            ): 
+
+            if message.id % 100 == 0: print(f'Processing messages, {message.id} remaining') # debug
+
+            chat_image_messages.append(
+                {
+                    'chat_id': chat_id,         # chat_id is the same for all messages
+                    'id': message.id,           # message id
+                    'photo': message.photo,     # photo object (use message.download_media() to download)
+                    'text': message.text,       # message text
+                }
+            )
+            bar()
+    return chat_image_messages

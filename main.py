@@ -28,6 +28,8 @@ repeat = False
 # todo -> in config add option to refine search criteria
   # to be set by apple script with popup
 # add dialogue at the beginning
+    # If discogs token is not found, prompt user to login
+    # If telegram token is not found, prompt user to login
     # what would you like to do? search or change settings?
     # -> update username, etc.
     # -> update default save option
@@ -91,43 +93,15 @@ async def main():
     print('\nYour chats:')
     print('--------------------------------------------------------------------------------')
     
-    # todo -> migrate to helper
-    # def get_dialogs()
-    with alive_bar() as bar:
-        async for dialog in client.iter_dialogs():
-            if str(dialog.id)[0] == '-':
-                chats.append(
-                    {
-                        'id': dialog.id,
-                        'name': dialog.name
-                    }
-                )
-                print(f'"{dialog.name}" has ID {dialog.id}')
-                bar()
+    # Get all user's chats from Telegram
+    chats = await utils.get_dialogs(client)
 
     # Ask user to select a chat
     print('\nWhich group do you want to search?')
     chat_id, chat_name = tele.select_chat(chats)
 
-    # todo -> migrate to helper
-    # def get_chats()
-    with alive_bar() as bar:
-        async for message in client.iter_messages(chat_id, 
-            limit=message_limit, 
-            filter=InputMessagesFilterPhotos,
-            ): 
-
-            if message.id % 100 == 0: print(f'Processing messages, {message.id} remaining') # debug
-
-            chat_image_messages.append(
-                {
-                    'chat_id': chat_id,         # chat_id is the same for all messages
-                    'id': message.id,           # message id
-                    'photo': message.photo,     # photo object (use message.download_media() to download)
-                    'text': message.text,       # message text
-                }
-            )
-            bar()
+    # Get all messages from selected chat
+    chat_image_messages = await utils.get_chat_messages(client, chat_id, message_limit)
 
     # Check matches
     print('\nChecking matches...')
